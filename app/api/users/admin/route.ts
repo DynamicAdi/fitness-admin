@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 async function updateUserStatuses() {
   await prisma.user.updateMany({
     where: {
-      role: "USER",
+      role: { in: ["ADMIN", "SUPER_ADMIN"] },
       membership: null,
       status: "ACTIVE",
     },
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 
     const users = await prisma.user.findMany({
       where: {
-        role: "USER",
+        role: { in: ["ADMIN", "SUPER_ADMIN"] },
         OR: [{ name: { contains: search, mode: "insensitive" } }, { email: { contains: search, mode: "insensitive" } }],
       },
       select: {
@@ -48,6 +48,7 @@ export async function GET(request: Request) {
         membership: true,
         image: true,
         createdAt: true,
+        role: true,
         trainer: {
           select: {
             id: true,

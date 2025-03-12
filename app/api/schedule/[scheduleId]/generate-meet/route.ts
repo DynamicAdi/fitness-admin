@@ -116,7 +116,7 @@ export async function POST(
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "TRAINER")) {
+    if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN" && session.user.role !== "TRAINER")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 

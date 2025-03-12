@@ -18,7 +18,7 @@ export default async function Dashboard() {
   }
 
   // Render the appropriate dashboard based on the user's role
-  if (session.user.role === 'ADMIN') {
+  if (session.user.role === 'ADMIN' || session.user.role === 'SUPER_ADMIN') {
     return <DashboardPage />
   } else if (session.user.role === 'TRAINER') {
     return <TrainerDashboard />

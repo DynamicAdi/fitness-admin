@@ -15,7 +15,7 @@ export async function PUT(request: Request, context: RouteContext) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "TRAINER")) {
+    if (!session || (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN" && session.user.role !== "TRAINER")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 

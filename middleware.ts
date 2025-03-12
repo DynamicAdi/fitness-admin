@@ -27,10 +27,12 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  if (path.startsWith("/admin") && token.role !== "ADMIN") {
+  if (path.startsWith("/admin") && token.role !== "ADMIN" && token.role !== "SUPER_ADMIN") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
-
+  // if (path.startsWith("/admin/super") || path.startsWith("/admin/chats") && token.role !== "SUPER_ADMIN") {
+  //   return NextResponse.redirect(new URL("/dashboard", request.url));
+  // }
   if (path.startsWith("/trainer") && token.role !== "TRAINER") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
