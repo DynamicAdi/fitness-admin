@@ -16,6 +16,7 @@ interface User {
   id: string
   name: string
   email: string
+  role: string
   status: "ACTIVE" | "INACTIVE"
   membership: "BASIC" | "PREMIUM" | null
   image: string | null
