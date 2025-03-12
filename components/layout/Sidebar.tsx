@@ -6,8 +6,15 @@ import { usePathname } from "next/navigation"
 import { BarChart2, Users, Dumbbell, Calendar, MessageSquare, HeadphonesIcon, Home, LineChart, Settings, HelpCircle, Menu, X, LucideAward } from 'lucide-react'
 import { useSession } from "next-auth/react"
 
+type NavigationItem = {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  super_admin_only?: boolean;
+};
+
 // Admin navigation items
-const adminNavigation = [
+const adminNavigation: NavigationItem[] = [
   { name: "Dashboard", href: "/dashboard", icon: BarChart2 },
   { name: "User Management", href: "/admin/users", icon: Users },
   { name: "Admin Management", href: "/admin/super", icon: LucideAward, super_admin_only: true },
@@ -19,7 +26,7 @@ const adminNavigation = [
 ]
 
 // Trainer navigation items - matching the image
-const trainerNavigation = [
+const trainerNavigation: NavigationItem[] = [
   { name: "Home", href: "/dashboard", icon: Home },
   { name: "Analytics", href: "/trainer/analytics", icon: LineChart },
   { name: "Schedule", href: "/trainer/schedule", icon: Calendar },
@@ -78,7 +85,7 @@ export function Sidebar() {
             }
           }}
         >
-          <item.icon className="h-6 w-6" />
+          {<item.icon size={24} className="h-6 w-6" />}
           <span className="ml-3">{item.name}</span>
         </Link>
       </li>
