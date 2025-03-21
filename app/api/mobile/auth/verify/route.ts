@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ "user": false }, { status: 404 });
+      return NextResponse.json({ "user": false }, { status: 200 });
     }
 
     return NextResponse.json({ "user": true }, { status: 200});
