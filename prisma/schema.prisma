@@ -96,14 +96,15 @@ model Schedule {
   sessionType         String?
   status              String   @default("pending")
   userId              String
-  trainerId           String?
+  trainerId           String
   user                User     @relation("UserSchedules", fields: [userId], references: [id])
-  trainer             User?     @relation("TrainerSchedules", fields: [trainerId], references: [id])
+  trainer             User     @relation("TrainerSchedules", fields: [trainerId], references: [id])
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   notifications       Notification[]
 
   @@index([userId])
+  @@index([trainerId])
 }
 
 model Session {

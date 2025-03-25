@@ -171,7 +171,7 @@ export async function POST(
       },
       attendees: [
         { email: schedule.user.email },
-        // { email: schedule.trainer.email },
+        { email: schedule.trainer.email },
         { email: session.user.email },
       ],
       conferenceData: {

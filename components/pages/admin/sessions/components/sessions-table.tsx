@@ -31,6 +31,7 @@ interface Session {
   scheduleLink?: string
   trainer: {
     name: string
+    id: string
     image: string
   }
   user: {
@@ -61,6 +62,7 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
       const response = await fetch(`/api/schedule?page=${currentPage}&search=${searchTerm}`)
       const data = await response.json()
       setSessions(data.schedules)
+      console.log(data)
       setTotalPages(data.totalPages)
     } catch (error) {
       console.error('Error fetching sessions:', error)
@@ -93,12 +95,12 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
   }
 
-  const handleDeleteClick = (session: Session) => {
+  const handleDeleteClick = (session: any) => {
     setSelectedSession(session)
     setDeleteModalOpen(true)
   }
 
-  const handleEditClick = (session: Session) => {
+  const handleEditClick = (session: any) => {
     setSelectedSession(session)
     setEditModalOpen(true)
   }

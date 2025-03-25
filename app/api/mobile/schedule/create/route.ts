@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const { date, startTime, endTime, scheduleLink, scheduleSubject, scheduleDescription, sessionType } =
       body
 
-    if (!date || !startTime || !endTime || !scheduleSubject || !sessionType) {
+    if (!date || !startTime || !endTime || !scheduleSubject) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
@@ -29,7 +29,9 @@ export async function POST(request: NextRequest) {
         scheduleSubject,
         scheduleDescription,
         sessionType,
+        status: "waitingToApproved",
         userId: decoded.id,
+        trainerId: "cm7t9otkb0001jr03ffoittep",
       },
     })
 

@@ -3,6 +3,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Session {
   id: string
@@ -11,6 +18,11 @@ interface Session {
   endTime: string
   scheduleSubject: string
   scheduleLink?: string
+  trainer: {
+    name: string,
+    id: string,
+    image: string
+  }
 }
 
 interface EditSessionModalProps {
@@ -22,7 +34,7 @@ interface EditSessionModalProps {
 
 export function EditSessionModal({ isOpen, onClose, onConfirm, session }: EditSessionModalProps) {
   const [formData, setFormData] = useState<Partial<Session>>({})
-
+  const [trainer, setTrainers] = useState<string[]>([])
   useEffect(() => {
     if (session) {
       setFormData({
@@ -30,8 +42,19 @@ export function EditSessionModal({ isOpen, onClose, onConfirm, session }: EditSe
         startTime: new Date(session.startTime).toTimeString().slice(0, 5),
         endTime: new Date(session.endTime).toTimeString().slice(0, 5),
         scheduleSubject: session.scheduleSubject,
+        trainer: session.trainer
       })
     }
+    const fetchTrainers = async () => {
+      try {
+        const response = await fetch('/api/users/trainers')
+        const data = await response.json()
+        setTrainers(data)
+      } catch (error) {
+        console.error('Error fetching trainers:', error)
+      }
+    }
+    fetchTrainers()
   }, [session])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,12 +63,15 @@ export function EditSessionModal({ isOpen, onClose, onConfirm, session }: EditSe
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const { date, startTime, endTime, scheduleSubject } = formData
+    // console.log(formData)
+    const { date, startTime, endTime, scheduleSubject, trainer } = formData
+    if (!trainer?.id) return;
     const updatedData = {
       date: new Date(date as string).toISOString(),
       startTime: new Date(`${date}T${startTime}`).toISOString(),
       endTime: new Date(`${date}T${endTime}`).toISOString(),
       scheduleSubject,
+      trainerId: trainer.id
     }
     onConfirm(updatedData)
   }
@@ -96,6 +122,35 @@ export function EditSessionModal({ isOpen, onClose, onConfirm, session }: EditSe
                 onChange={handleChange}
                 className="col-span-3"
               />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="scheduleSubject" className="text-right">
+                Trainer
+              </Label>
+
+              <Select
+              defaultValue={"Vikram"}
+              onValueChange={(e: string) => setFormData({ ...formData, trainer: {id: e, name: "", image: ""} })}
+            >
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Select Trainer" />
+              </SelectTrigger>
+              <SelectContent>
+              {trainer.map((trainer: any) => (
+                        <SelectItem key={trainer.id} value={trainer.id}>
+                          {trainer.name}
+                        </SelectItem>
+                      ))}
+              </SelectContent>
+            </Select>
+
+              {/* <Input
+                id="scheduleSubject"
+                name="scheduleSubject"
+                value={formData.trainer.name || ""}
+                onChange={handleChange}
+                className="col-span-3"
+              /> */}
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="scheduleSubject" className="text-right">

@@ -21,7 +21,7 @@ export async function PUT(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Invalid user" }, { status: 403 })
     }
 
-    const { date, startTime, endTime, scheduleSubject } = body
+    const { date, startTime, endTime, scheduleSubject, trainerId } = body
 
     const schedule = await prisma.schedule.update({
       where: {
@@ -32,6 +32,7 @@ export async function PUT(request: Request, context: RouteContext) {
         startTime: new Date(startTime),
         endTime: new Date(endTime),
         scheduleSubject,
+        trainerId,
       },
       include: {
         user: true,
@@ -42,7 +43,7 @@ export async function PUT(request: Request, context: RouteContext) {
     // Create notification
     await prisma.notification.create({
       data: {
-        message: `Schedule updated: ${scheduleSubject} on ${new Date(date).toLocaleDateString()} at ${new Date(startTime).toLocaleTimeString()} for ${schedule.user.name} with ${schedule?.trainer?.name || "N/A"}`,
+        message: `Schedule updated: ${scheduleSubject} on ${new Date(date).toLocaleDateString()} at ${new Date(startTime).toLocaleTimeString()} for ${schedule.user.name} with trainer ${schedule?.trainer?.name}`,
         scheduleId: schedule.id,
         userId: schedule.userId,
         trainerId: schedule?.trainerId || "",
