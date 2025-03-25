@@ -42,10 +42,10 @@ export async function PUT(request: Request, context: RouteContext) {
     // Create notification
     await prisma.notification.create({
       data: {
-        message: `Schedule updated: ${scheduleSubject} on ${new Date(date).toLocaleDateString()} at ${new Date(startTime).toLocaleTimeString()} for ${schedule.user.name} with trainer ${schedule.trainer.name}`,
+        message: `Schedule updated: ${scheduleSubject} on ${new Date(date).toLocaleDateString()} at ${new Date(startTime).toLocaleTimeString()} for ${schedule.user.name} with ${schedule?.trainer?.name || "N/A"}`,
         scheduleId: schedule.id,
         userId: schedule.userId,
-        trainerId: schedule.trainerId,
+        trainerId: schedule?.trainerId || "",
       },
     })
 
