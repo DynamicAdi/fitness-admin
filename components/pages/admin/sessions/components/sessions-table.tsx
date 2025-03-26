@@ -29,17 +29,14 @@ interface Session {
   endTime: string
   scheduleSubject: string
   scheduleLink?: string
-  trainer: {
-    name: string
-    id: string
-    image: string
-  }
+  status: string
+  trainer: any
   user: {
     name: string
     image: string
   }
   sessionType: string
-  status: 'pending' | 'completed' | 'upcoming'
+  // status: 'pending' | 'completed' | 'upcoming' | 'requested'
 }
 
 interface SessionsTableProps {
@@ -62,7 +59,6 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
       const response = await fetch(`/api/schedule?page=${currentPage}&search=${searchTerm}`)
       const data = await response.json()
       setSessions(data.schedules)
-      console.log(data)
       setTotalPages(data.totalPages)
     } catch (error) {
       console.error('Error fetching sessions:', error)
@@ -178,6 +174,7 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
                     <AvatarFallback>{session.trainer.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   {session.trainer.name}
+                  
                 </div>
               </TableCell>
               <TableCell>
@@ -192,13 +189,13 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
               <TableCell>
                 <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
                   ${session.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    session.status === 'upcoming' ? 'bg-blue-100 text-blue-800' :
+                    session.status === 'requested' ? 'bg-blue-100 text-blue-800' :
                       'bg-yellow-100 text-yellow-800'}`}>
                   {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
                 </div>
               </TableCell>
               <TableCell>
-                {session.status !== 'completed' && (
+                {session.status !== 'completed' && session.status !== 'requested' && (
                   session.scheduleLink ? (
                     <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => window.open(session.scheduleLink, '_blank')}>
                       <Video className="h-4 w-4" />

@@ -1,8 +1,9 @@
 export type ScheduleStatus =
   | "pending"
-  | "waitingToApproved"
+  | "requested"
   | "completed"
-  | "upcoming";
+
+
 
 export interface Schedule {
   id: string;

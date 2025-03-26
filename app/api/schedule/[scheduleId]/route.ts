@@ -21,7 +21,7 @@ export async function PUT(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Invalid user" }, { status: 403 })
     }
 
-    const { date, startTime, endTime, scheduleSubject, trainerId } = body
+    const { date, startTime, endTime, scheduleSubject, trainerId, status } = body
 
     const schedule = await prisma.schedule.update({
       where: {
@@ -33,6 +33,7 @@ export async function PUT(request: Request, context: RouteContext) {
         endTime: new Date(endTime),
         scheduleSubject,
         trainerId,
+        status
       },
       include: {
         user: true,

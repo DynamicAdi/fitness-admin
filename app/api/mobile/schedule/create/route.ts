@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         scheduleSubject,
         scheduleDescription,
         sessionType,
-        status: "waitingToApproved",
+        status: "requested",
         userId: decoded.id,
         trainerId: "cm7t9otkb0001jr03ffoittep",
       },

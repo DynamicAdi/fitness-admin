@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       where: {
         userId: decoded.id,
         status: {
-          in: ["upcoming", "waitingToApproved"],
+          in: ["pending"],
         },
         date: {
           gte: new Date(),

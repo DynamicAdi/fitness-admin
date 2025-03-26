@@ -94,7 +94,7 @@ model Schedule {
   scheduleSubject     String
   scheduleDescription String?
   sessionType         String?
-  status              String   @default("pending")
+  status              String   @default("requested")
   userId              String
   trainerId           String
   user                User     @relation("UserSchedules", fields: [userId], references: [id])
