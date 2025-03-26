@@ -71,11 +71,8 @@ export interface Session {
   endTime: string;
   scheduleSubject: string;
   scheduleLink?: string;
-  status: ScheduleStatus;
-  trainer: {
-    name: string;
-    image: string;
-  };
+  status: string;
+  trainer: any
   user: {
     name: string;
     image: string;
