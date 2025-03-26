@@ -43,6 +43,7 @@ const formSchema = z.object({
 interface User {
   id: string
   name: string
+  email: string
 }
 
 interface AssignSessionModalProps {
@@ -139,7 +140,7 @@ export function AssignSessionModal({
                     <SelectContent>
                       {trainers.map((trainer) => (
                         <SelectItem key={trainer.id} value={trainer.id}>
-                          {trainer.name}
+                          {trainer.name} {`(${trainer.email})`}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -163,7 +164,7 @@ export function AssignSessionModal({
                     <SelectContent>
                       {clients.map((client) => (
                         <SelectItem key={client.id} value={client.id}>
-                          {client.name}
+                          {client.name}  {`(${client.email})`}
                         </SelectItem>
                       ))}
                     </SelectContent>

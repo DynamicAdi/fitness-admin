@@ -138,7 +138,7 @@ export function EditSessionModal({ isOpen, onClose, onConfirm, session }: EditSe
               <SelectContent>
               {trainer.map((trainer: any) => (
                         <SelectItem key={trainer.id} value={trainer.id}>
-                          {trainer.name}
+                          {trainer.name} {`(${trainer.email})`}
                         </SelectItem>
                       ))}
               </SelectContent>
