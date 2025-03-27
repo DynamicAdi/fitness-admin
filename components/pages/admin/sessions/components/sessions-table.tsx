@@ -30,7 +30,11 @@ interface Session {
   scheduleSubject: string
   scheduleLink?: string
   status: string
-  trainer: any
+  trainer: {
+    id: string,
+    name: string,
+    image?: string
+  }
   user: {
     name: string
     image: string
@@ -53,7 +57,7 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedSession, setSelectedSession] = useState<Session | null>(null)
-
+  const [meetLink, setMeetLink] = useState<string>("");
   const fetchSessions = useCallback(async () => {
     try {
       const response = await fetch(`/api/schedule?page=${currentPage}&search=${searchTerm}`)
@@ -119,23 +123,31 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
 
   const handleAddLink = async (id: string) => {
     try {
-      const response = await fetch(`/api/schedule/${id}/generate-meet`, {
-        method: 'POST',
-      })
-      if (response.ok) {
-        const { meetLink } = await response.json()
-        onAddLink(id, meetLink)
-        fetchSessions()
-        window.location.reload()
-      } else if (response.status === 401) {
-        const { authUrl } = await response.json()
-        window.location.href = authUrl // Redirect to Google OAuth
-      } else {
-        throw new Error("Failed to generate Google Meet link")
-      }
-    } catch (error) {
-      console.error('Error generating Google Meet link:', error)
+      console.log(id, meetLink)
+      onAddLink(id, meetLink)
+      fetchSessions()
+      // window.location.reload()
     }
+    catch (e) {
+      console.log("Error on:", e)
+    }
+
+    // try {
+
+    //   // const response = await fetch(`/api/schedule/${id}/generate-meet`, {
+    //   //   method: 'POST',
+    //   // })
+    //   if (response.ok) {
+    //     // const { meetLink } = await response.json()
+    //   } else if (response.status === 401) {
+    //     const { authUrl } = await response.json()
+    //     window.location.href = authUrl // Redirect to Google OAuth
+    //   } else {
+    //     throw new Error("Failed to generate Google Meet link")
+    //   }
+    // } catch (error) {
+    //   console.error('Error generating Google Meet link:', error)
+    // }
   }
 
   return (
@@ -170,7 +182,7 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
               <TableCell>
                 <div className="flex items-center">
                   <Avatar className="h-8 w-8 mr-2">
-                    <AvatarImage src={session.trainer.image || "/pfp.jpg"} alt={session.trainer.name} />
+                    <AvatarImage src={session.trainer?.image || "/pfp.jpg"} alt={session.trainer.name} />
                     <AvatarFallback>{session.trainer.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   {session.trainer.name}
@@ -202,9 +214,16 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
                       <span>Join</span>
                     </Button>
                   ) : (
-                    <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => handleAddLink(session.id)}>
-                      Generate Link
+                    <div className="flex justify-between gap-2">
+                    {/* <Input
+                    className="w-3/4" 
+                    placeholder="Enter Meeting Links..."
+                    onChange={(e) => setMeetLink(e.target.value)}
+                    /> */}
+                    <Button variant="default" className="px-3 py-1" onClick={() => handleEditClick(session)}>
+                      Add Link
                     </Button>
+                    </div>
                   )
                 )}
               </TableCell>

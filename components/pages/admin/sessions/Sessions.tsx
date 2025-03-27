@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import type { Session } from "@/types/schedule"
 import { useAdminContext } from "@/context/admin"
 
+
+
 interface Stats {
   totalSessions: number
   activeSessions: number
@@ -109,7 +111,7 @@ export default function Sessions() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ scheduleLink: link, status: "upcoming" }),
+        body: JSON.stringify({ scheduleLink: `${link}` }),
       })
       if (response.ok) {
         fetchStats()
@@ -123,6 +125,8 @@ export default function Sessions() {
       toast.error("Failed to add link")
     }
   }
+
+
 
   return (
     <div className="space-y-8 p-8 lg:ml-64">

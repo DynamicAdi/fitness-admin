@@ -21,8 +21,8 @@ export async function PUT(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Invalid user" }, { status: 403 })
     }
 
-    const { date, startTime, endTime, scheduleSubject, trainerId, status } = body
-
+    const { date, startTime, endTime, scheduleSubject, trainerId, status, scheduleLink } = body
+    console.log(scheduleId, scheduleLink)
     const schedule = await prisma.schedule.update({
       where: {
         id: scheduleId,
@@ -33,7 +33,8 @@ export async function PUT(request: Request, context: RouteContext) {
         endTime: new Date(endTime),
         scheduleSubject,
         trainerId,
-        status
+        status,
+        scheduleLink
       },
       include: {
         user: true,
@@ -53,8 +54,10 @@ export async function PUT(request: Request, context: RouteContext) {
 
     return NextResponse.json({ schedule })
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "An unknown error occurred" },
+      {error: error},
+      // { error: error instanceof Error ? error.message : "An unknown error occurred" },
       { status: 500 },
     )
   }
