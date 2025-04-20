@@ -6,7 +6,7 @@ function Page() {
       <h1 className="text-2xl font-bold mb-4">Privacy Policy</h1>
 
       <p className="mb-4">
-        This privacy policy applies to the Fitness Evolution app (hereby referred to as "Application") for mobile devices that was created by Fitness Evolution (hereby referred to as "Service Provider") as a Free service. This service is intended for use "AS IS".
+        This privacy policy applies to the Fitness Evolution app (hereby referred to as Application) for mobile devices that was created by Fitness Evolution (hereby referred to as Service Provider) as a Free service. This service is intended for use AS IS.
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">Information Collection and Use</h2>
@@ -14,7 +14,7 @@ function Page() {
         The Application collects information when you download and use it. This information may include information such as:
       </p>
       <ul className="list-disc list-inside mb-4 space-y-1">
-        <li>Your device's Internet Protocol address (e.g. IP address)</li>
+        <li>Your device&apos;s Internet Protocol address (e.g. IP address)</li>
         <li>The pages of the Application that you visit, the time and date of your visit, the time spent on those pages</li>
         <li>The time spent on the Application</li>
         <li>The operating system you use on your mobile device</li>
@@ -61,7 +61,7 @@ function Page() {
 
       <h2 className="text-xl font-semibold mt-6 mb-2">Data Retention Policy</h2>
       <p className="mb-4">
-        The Service Provider will retain User Provided data for as long as you use the Application and for a reasonable time thereafter. If you'd like them to delete User Provided Data that you have provided via the Application, please contact them at <a href="mailto:fitnessevolution108@gmail.com" className="text-blue-600 hover:underline">fitnessevolution108@gmail.com</a> and they will respond in a reasonable time.
+        The Service Provider will retain User Provided data for as long as you use the Application and for a reasonable time thereafter. If you&apos;d like them to delete User Provided Data that you have provided via the Application, please contact them at <a href="mailto:fitnessevolution108@gmail.com" className="text-blue-600 hover:underline">fitnessevolution108@gmail.com</a> and they will respond in a reasonable time.
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">Children</h2>
