@@ -14,6 +14,7 @@ interface Trainer {
   id: string
   name: string
   email: string
+  image?: string
   specialization: string
   rating: number | null
   clients: Array<Trainer>
@@ -37,9 +38,11 @@ export function TrainerTable() {
   const [newTrainer, setNewTrainer] = useState({
     name: "",
     email: "",
+    image: "",
     password: "",
     specialization: "",
-  })
+  });
+  
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     currentPage: 1,
     totalPages: 1,
@@ -47,6 +50,35 @@ export function TrainerTable() {
   })
   const [isLoading, setIsLoading] = useState(true)
 
+  async function uploadToCloudinary(file: any) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'my_unsigned_preset');
+  
+    const response = await fetch('https://api.cloudinary.com/v1_1/dozknak00/image/upload', {
+      method: 'POST',
+      body: formData,
+    });
+  
+    if (!response.ok) {
+      throw new Error('Failed to upload image');
+    }
+  
+    const data = await response.json();
+    return data.secure_url; // This is the URL of the uploaded image
+  }
+  
+  const handleUpload = async (event: any) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const imageUrl = await uploadToCloudinary(file);
+      isEditDialogOpen ? setEditTrainer({ ...editTrainer!, image: imageUrl }) : setNewTrainer((prev: any) => ({ ...prev, image: imageUrl }));
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
+  };
   const fetchTrainers = useCallback(async () => {
     setIsLoading(true)
     try {
@@ -159,7 +191,7 @@ export function TrainerTable() {
       if (response.ok) {
         setIsAddDialogOpen(false)
         fetchTrainers()
-        setNewTrainer({ name: "", email: "", password: "", specialization: "" })
+        setNewTrainer({ name: "", email: "", password: "", specialization: "", image: "" })
         toast.success("Trainer added successfully")
         window.location.reload()
       } else {
@@ -213,7 +245,7 @@ export function TrainerTable() {
                 <TableRow key={trainer.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <Image src="/pfp.jpg" alt="profile" width={40} height={40} className="rounded-full bg-gray-100" />
+                      <Image src={trainer.image ? trainer.image : "/pfp.jpg"} alt="profile" width={40} height={40} className="rounded-full bg-gray-100" />
                       <div>
                         <div className="font-medium">{trainer.name}</div>
                         <div className="text-sm text-muted-foreground">{trainer.email}</div>
@@ -313,6 +345,22 @@ export function TrainerTable() {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="new-email" className="text-right">
+                  Image
+                </Label>
+                {
+                editTrainer.image!=="" ? <Image src={editTrainer.image} alt={"Trainer image"} width={600} height={600} className="rounded-xl" /> :
+                <Input
+                id="new-image"
+                type="file"
+                accept="image/*"
+                value={editTrainer.image}
+                onChange={handleUpload}
+                className="col-span-3"
+                />
+              }
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="specialization" className="text-right">
                   Specialization
                 </Label>
@@ -393,6 +441,22 @@ export function TrainerTable() {
                   onChange={(e) => setNewTrainer({ ...newTrainer, email: e.target.value })}
                   className="col-span-3"
                 />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="new-email" className="text-right">
+                  Image
+                </Label>
+              {
+                newTrainer.image!=="" ? <Image src={newTrainer.image} alt={"Trainer image"} width={600} height={600} className="rounded-xl" /> :
+                <Input
+                id="new-image"
+                type="file"
+                accept="image/*"
+                value={newTrainer.image}
+                onChange={handleUpload}
+                className="col-span-3"
+                />
+              }
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new-password" className="text-right">

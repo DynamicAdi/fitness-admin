@@ -23,13 +23,14 @@ export async function PUT(
     }
 
     const { trainerId } = await context.params
-    const { name, email, specialization, status } = await request.json()
+    const { name, email, specialization, status, image } = await request.json()
 
     const updatedTrainer = await prisma.user.update({
       where: { id: trainerId },
       data: {
         name,
         email,
+        image,
         specialization,
         status,
       },

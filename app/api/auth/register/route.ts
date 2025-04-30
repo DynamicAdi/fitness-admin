@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { email, name, password, specialization } = body
+    const { email, name, password, specialization, image } = body
 
     if (!email || !name || !password) {
       return new NextResponse("Missing fields", { status: 400 })
@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       data: {
         email,
         name,
+        image,
         password: hashedPassword,
         specialization: specialization ? specialization : '',
         role: "TRAINER",
