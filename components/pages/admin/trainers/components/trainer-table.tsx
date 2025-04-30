@@ -9,6 +9,7 @@ import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface Trainer {
   id: string
@@ -49,6 +50,45 @@ export function TrainerTable() {
     totalItems: 0,
   })
   const [isLoading, setIsLoading] = useState(true)
+
+    const [trainersList, setTrainersList] = useState<{ id: string; name: string, email: string }[]>([])
+  
+    useEffect(() => {
+      const fetchTrainers = async () => {
+        try {
+          const response = await fetch("/api/users/userList")
+          
+          if (response.status === 200) {
+              const data = await response.json()
+            setTrainersList(data)
+          }
+        } catch (error) {
+          console.error("Error fetching trainers:", error)
+        }
+      }
+      fetchTrainers()
+    }, [])
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      const formData = new FormData(event.currentTarget)
+      const value = formData.get("adminFor")
+  
+          console.log(value)
+      try {
+          const res = await fetch("/api/users/userList", {
+              method: "POST",
+              body: JSON.stringify({id: value, selectedRole: "TRAINER", specialization: newTrainer.specialization, image: newTrainer.image })
+          })
+          if (res.status === 200) {
+              window.location.reload()
+          }
+      } catch (error) {
+        console.error("Error While prompting:", error)
+        toast.error("An error occurred while creating the user.")
+      }
+    }
+  
 
   async function uploadToCloudinary(file: any) {
     const formData = new FormData();
@@ -429,31 +469,23 @@ export function TrainerTable() {
           <DialogHeader>
             <DialogTitle>Add New Trainer</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleAddTrainer}>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="new-name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="new-name"
-                  value={newTrainer.name}
-                  onChange={(e) => setNewTrainer({ ...newTrainer, name: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="new-email" className="text-right">
-                  Email
-                </Label>
-                <Input
-                  id="new-email"
-                  type="email"
-                  value={newTrainer.email}
-                  onChange={(e) => setNewTrainer({ ...newTrainer, email: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="adminFor">Assigned New Trainer</Label>
+                          <Select name="adminFor">
+                            <SelectTrigger id="adminFor">
+                              <SelectValue placeholder="Select a User or Trainer" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {trainersList.map((trainer) => (
+                                <SelectItem key={trainer.id} value={trainer.id}>
+                                  {trainer.name} {`(${trainer.email})`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new-email" className="text-right">
                   Image
@@ -470,7 +502,7 @@ export function TrainerTable() {
                 />
               }
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              {/* <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new-password" className="text-right">
                   Password
                 </Label>
@@ -481,7 +513,7 @@ export function TrainerTable() {
                   onChange={(e) => setNewTrainer({ ...newTrainer, password: e.target.value })}
                   className="col-span-3"
                 />
-              </div>
+              </div> */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new-specialization" className="text-right">
                   Specialization

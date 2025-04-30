@@ -17,7 +17,7 @@ interface AddUserModalProps {
 
 export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProps) {
   const [showPassword, setShowPassword] = useState(false)
-  const [trainers, setTrainers] = useState<{ id: string; name: string }[]>([])
+  const [trainers, setTrainers] = useState<{ id: string; name: string, email: string }[]>([])
 
   useEffect(() => {
     const fetchTrainers = async () => {
@@ -72,7 +72,7 @@ export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProp
               <SelectContent>
                 {trainers.map((trainer) => (
                   <SelectItem key={trainer.id} value={trainer.id}>
-                    {trainer.name}
+                    {trainer.name} {`(${trainer.email})`}
                   </SelectItem>
                 ))}
               </SelectContent>

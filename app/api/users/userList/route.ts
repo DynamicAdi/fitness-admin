@@ -37,16 +37,16 @@ export async function GET() {
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions)
-    const {id, selectedRole} = await req.json()
+    const {id, selectedRole, specialization, image} = await req.json()
 
     try {
-        if (!session || (session.user.role !== "SUPER_ADMIN")) {
+        if (!session || (session.user.role !== "SUPER_ADMIN" && session.user.role !== "ADMIN")) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
         }
 
         await prisma.user.update({
             where: {id: id},
-            data: {role: selectedRole}
+            data: {role: selectedRole, specialization: specialization, image: image}
         })
     return NextResponse.json({"Message": "Done"})
     }
