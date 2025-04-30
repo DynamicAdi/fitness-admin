@@ -69,6 +69,7 @@ export function TrainerTable() {
   }
   
   const handleUpload = async (event: any) => {
+    setIsLoading(true)
     const file = event.target.files[0];
     if (!file) return;
 
@@ -77,6 +78,9 @@ export function TrainerTable() {
       isEditDialogOpen ? setEditTrainer({ ...editTrainer!, image: imageUrl }) : setNewTrainer((prev: any) => ({ ...prev, image: imageUrl }));
     } catch (error) {
       console.error('Upload failed:', error);
+    }
+    finally {
+      setIsLoading(false)
     }
   };
   const fetchTrainers = useCallback(async () => {
@@ -395,7 +399,7 @@ export function TrainerTable() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={isLoading ? true : false}>Save changes</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -491,7 +495,7 @@ export function TrainerTable() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Add Trainer</Button>
+              <Button type="submit" disabled={isLoading ? true : false}>Add Trainer</Button>
             </DialogFooter>
           </form>
         </DialogContent>
