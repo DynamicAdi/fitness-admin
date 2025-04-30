@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
           id: true,
           name: true,
           email: true,
+          image: true,
           specialization: true,
           rating: true,
           clients: true,
