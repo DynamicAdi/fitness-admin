@@ -349,16 +349,24 @@ export function TrainerTable() {
                   Image
                 </Label>
                 {
-                editTrainer.image!=="" ? <Image src={editTrainer.image} alt={"Trainer image"} width={600} height={600} className="rounded-xl" /> :
-                <Input
-                id="new-image"
-                type="file"
-                accept="image/*"
-                value={editTrainer.image}
-                onChange={handleUpload}
-                className="col-span-3"
-                />
-              }
+  editTrainer?.image ? (
+    <Image
+      src={editTrainer.image}
+      alt="Trainer image"
+      width={600}
+      height={600}
+      className="rounded-xl"
+    />
+  ) : (
+    <Input
+      id="new-image"
+      type="file"
+      accept="image/*"
+      onChange={handleUpload}
+      className="col-span-3"
+    />
+  )
+}
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="specialization" className="text-right">
@@ -447,12 +455,12 @@ export function TrainerTable() {
                   Image
                 </Label>
               {
-                newTrainer.image!=="" ? <Image src={newTrainer.image} alt={"Trainer image"} width={600} height={600} className="rounded-xl" /> :
+                newTrainer.image ? <Image src={newTrainer.image} alt={"Trainer image"} width={600} height={600} className="rounded-xl" /> :
                 <Input
                 id="new-image"
                 type="file"
                 accept="image/*"
-                value={newTrainer.image}
+                // value={newTrainer.image}
                 onChange={handleUpload}
                 className="col-span-3"
                 />
