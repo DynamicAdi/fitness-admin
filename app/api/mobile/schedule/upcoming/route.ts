@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
         status: {
           in: ["requested", "pending"],
         },
-        date: {
-          gte: new Date(),
-        },
+        // date: {
+        //   gte: new Date(),
+        // },
       },
       select: {
         id: true,
