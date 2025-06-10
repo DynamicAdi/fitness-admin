@@ -96,7 +96,7 @@ export async function DELETE(request: NextRequest) {
       where: { id: decoded.id },
     });
 
-    return NextResponse.json({ message: "User deleted successfully" });
+    return NextResponse.json({ message: "User deleted successfully" }, {status: 200});
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
