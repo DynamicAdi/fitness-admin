@@ -123,6 +123,7 @@ export function TrainerTable() {
       setIsLoading(false)
     }
   };
+  
   const fetchTrainers = useCallback(async () => {
     setIsLoading(true)
     try {

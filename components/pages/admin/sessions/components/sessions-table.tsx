@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect, useCallback } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -16,120 +16,133 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { MoreHorizontal, Pencil, Trash, Video } from 'lucide-react'
-import { Input } from "@/components/ui/input"
-import { DeleteConfirmationModal } from "./delete-confirmation-modal"
-import { EditSessionModal } from "./edit-session-modal"
+} from "@/components/ui/table";
+import { MoreHorizontal, Pencil, Trash, Video } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { DeleteConfirmationModal } from "./delete-confirmation-modal";
+import { EditSessionModal } from "./edit-session-modal";
 
 interface Session {
-  id: string
-  date: string
-  startTime: string
-  endTime: string
-  scheduleSubject: string
-  scheduleLink?: string
-  status: string
+  id: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  scheduleSubject: string;
+  scheduleLink?: string;
+  status: string;
   trainer: {
-    id: string,
-    name: string,
-    image?: string
-  }
+    id: string;
+    name: string;
+    image?: string;
+  };
   user: {
-    name: string
-    image: string
-  }
-  sessionType: string
+    name: string;
+    image: string;
+  };
+  sessionType: string;
+  attended?: boolean;
   // status: 'pending' | 'completed' | 'upcoming' | 'requested'
 }
 
 interface SessionsTableProps {
-  onEdit: (id: string, data: Partial<Session>) => void
-  onDelete: (id: string) => void
-  onAddLink: (id: string, link: string) => void
+  onEdit: (id: string, data: Partial<Session>) => void;
+  onDelete: (id: string) => void;
+  onAddLink: (id: string, link: string) => void;
 }
 
-export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProps) {
-  const [sessions, setSessions] = useState<Session[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
-  const [editModalOpen, setEditModalOpen] = useState(false)
-  const [selectedSession, setSelectedSession] = useState<Session | null>(null)
+export function SessionsTable({
+  onEdit,
+  onDelete,
+  onAddLink,
+}: SessionsTableProps) {
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [meetLink, setMeetLink] = useState<string>("");
+
   const fetchSessions = useCallback(async () => {
     try {
-      const response = await fetch(`/api/schedule?page=${currentPage}&search=${searchTerm}`)
-      const data = await response.json()
-      setSessions(data.schedules)
-      setTotalPages(data.totalPages)
+      const response = await fetch(
+        `/api/schedule?page=${currentPage}&search=${searchTerm}`
+      );
+      const data = await response.json();
+      setSessions(data.schedules);
+      setTotalPages(data.totalPages);
     } catch (error) {
-      console.error('Error fetching sessions:', error)
+      console.error("Error fetching sessions:", error);
     }
-  }, [currentPage, searchTerm])
+  }, [currentPage, searchTerm]);
 
   useEffect(() => {
-    fetchSessions()
-  }, [fetchSessions])
+    fetchSessions();
+    const interval = setInterval(() => fetchSessions(), 60000);
+    return () => clearInterval(interval);
+  }, [fetchSessions]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
-    setCurrentPage(1)
-  }
+    setSearchTerm(event.target.value);
+    setCurrentPage(1);
+  };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
+      setCurrentPage(currentPage - 1);
     }
-  }
+  };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1)
+      setCurrentPage(currentPage + 1);
     }
-  }
+  };
 
   const formatTime = (timeString: string) => {
-    const date = new Date(timeString)
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
-  }
+    const date = new Date(timeString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
   const handleDeleteClick = (session: any) => {
-    setSelectedSession(session)
-    setDeleteModalOpen(true)
-  }
+    setSelectedSession(session);
+    setDeleteModalOpen(true);
+  };
 
   const handleEditClick = (session: any) => {
-    setSelectedSession(session)
-    setEditModalOpen(true)
-  }
+    setSelectedSession(session);
+    setEditModalOpen(true);
+  };
 
   const handleConfirmDelete = () => {
     if (selectedSession) {
-      onDelete(selectedSession.id)
-      setDeleteModalOpen(false)
-      setSelectedSession(null)
+      onDelete(selectedSession.id);
+      setDeleteModalOpen(false);
+      setSelectedSession(null);
     }
-  }
+  };
 
   const handleConfirmEdit = (data: Partial<Session>) => {
     if (selectedSession) {
-      onEdit(selectedSession.id, data)
-      setEditModalOpen(false)
-      setSelectedSession(null)
+      onEdit(selectedSession.id, data);
+      setEditModalOpen(false);
+      setSelectedSession(null);
     }
-  }
+  };
 
   const handleAddLink = async (id: string) => {
     try {
-      console.log(id, meetLink)
-      onAddLink(id, meetLink)
-      fetchSessions()
+      console.log(id, meetLink);
+      onAddLink(id, meetLink);
+      fetchSessions();
       // window.location.reload()
-    }
-    catch (e) {
-      console.log("Error on:", e)
+    } catch (e) {
+      console.log("Error on:", e);
     }
 
     // try {
@@ -148,8 +161,17 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
     // } catch (error) {
     //   console.error('Error generating Google Meet link:', error)
     // }
-  }
+  };
 
+  const handleStatus = async () => {};
+
+  const handleAttended = async (data: Partial<Session>) => {
+    if (selectedSession) {
+      onEdit(selectedSession.id, data);
+      setEditModalOpen(false);
+      setSelectedSession(null);
+    }
+  };
   return (
     <div>
       <Input
@@ -169,64 +191,119 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
             <TableHead>Client</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Meeting Link</TableHead>
+            <TableHead>Attended</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {sessions.map((session) => (
             <TableRow key={session.id}>
-              <TableCell>{new Date(session.date).toLocaleDateString()}</TableCell>
+              <TableCell>
+                {new Date(session.date).toLocaleDateString()}
+              </TableCell>
               <TableCell>{`${formatTime(session.startTime)} - ${formatTime(session.endTime)}`}</TableCell>
               <TableCell>{session.sessionType}</TableCell>
               <TableCell>{session.scheduleSubject}</TableCell>
               <TableCell>
                 <div className="flex items-center">
                   <Avatar className="h-8 w-8 mr-2">
-                    <AvatarImage src={session.trainer?.image || "/pfp.jpg"} alt={session.trainer.name} />
-                    <AvatarFallback>{session.trainer.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage
+                      src={session.trainer?.image || "/pfp.jpg"}
+                      alt={session.trainer.name}
+                    />
+                    <AvatarFallback>
+                      {session.trainer.name.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   {session.trainer.name}
-                  
                 </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center">
                   <Avatar className="h-8 w-8 mr-2">
-                    <AvatarImage src={session.user.image || "/pfp.jpg"} alt={session.user.name} />
-                    <AvatarFallback>{session.user.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage
+                      src={session.user.image || "/pfp.jpg"}
+                      alt={session.user.name}
+                    />
+                    <AvatarFallback>
+                      {session.user.name.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                   {session.user.name}
                 </div>
               </TableCell>
               <TableCell>
-                <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                  ${session.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    session.status === 'requested' ? 'bg-blue-100 text-blue-800' :
-                      'bg-yellow-100 text-yellow-800'}`}>
-                  {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
+                <div
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+                  ${
+                    session.status === "completed"
+                      ? "bg-green-100 text-green-800"
+                      : session.status === "requested"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-yellow-100 text-yellow-800"
+                  }`}
+                >
+                  {session.status.charAt(0).toUpperCase() +
+                    session.status.slice(1)}
                 </div>
               </TableCell>
               <TableCell>
-                {session.status !== 'completed' && session.status !== 'requested' && (
-                  session.scheduleLink ? (
-                    <Button variant="ghost" className="h-8 w-8 p-0" onClick={() => window.open(session.scheduleLink, '_blank')}>
+                {session.status !== "completed" &&
+                  session.status !== "requested" &&
+                  (session.scheduleLink ? (
+                    <Button
+                      variant="ghost"
+                      className="h-8 w-8 p-0"
+                      onClick={() =>
+                        window.open(session.scheduleLink, "_blank")
+                      }
+                    >
                       <Video className="h-4 w-4" />
                       <span>Join</span>
                     </Button>
                   ) : (
                     <div className="flex justify-between gap-2">
-                    {/* <Input
+                      {/* <Input
                     className="w-3/4" 
                     placeholder="Enter Meeting Links..."
                     onChange={(e) => setMeetLink(e.target.value)}
                     /> */}
-                    <Button variant="default" className="px-3 py-1" onClick={() => handleEditClick(session)}>
-                      Add Link
-                    </Button>
+                      <Button
+                        variant="default"
+                        className="px-3 py-1"
+                        onClick={() => handleEditClick(session)}
+                      >
+                        Add Link
+                      </Button>
                     </div>
+                  ))}
+              </TableCell>
+
+              <TableCell>
+                {session.status === "completed" && session.attended ? (
+                  <span className="text-green-500 text-xs">Completed</span>
+                ) : session.status === "pending" && session.attended ? (
+                  <span className="text-yellow-500 text-xs">
+                    Pending Completion
+                  </span>
+                ) : session.status === "pending" && !session.attended ? (
+                  new Date(session.endTime) <= new Date() ? (
+                    <Button
+                      variant="default"
+                      onClick={() => onEdit(session.id, { attended: true })}
+                    >
+                      Done
+                    </Button>
+                  ) : (
+                    <span className="text-gray-400 text-xs">
+                      Waiting to Complete
+                    </span>
                   )
+                ) : (
+                  <span className="text-gray-400 text-xs">Unknown</span>
                 )}
               </TableCell>
+
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -242,7 +319,9 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
                       Edit
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => handleDeleteClick(session)}>
+                    <DropdownMenuItem
+                      onClick={() => handleDeleteClick(session)}
+                    >
                       <Trash className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
@@ -254,9 +333,15 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
         </TableBody>
       </Table>
       <div className="flex justify-between items-center mt-4">
-        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <Button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Button>
+        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+          Previous
+        </Button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Next
+        </Button>
       </div>
 
       <DeleteConfirmationModal
@@ -272,5 +357,5 @@ export function SessionsTable({ onEdit, onDelete, onAddLink }: SessionsTableProp
         session={selectedSession}
       />
     </div>
-  )
+  );
 }

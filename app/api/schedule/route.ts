@@ -8,11 +8,13 @@ const prisma = new PrismaClient()
 async function updateScheduleStatuses() {
   const now = new Date()
 
-  // Update completed schedules
+  // Update completed schedules 
   await prisma.schedule.updateMany({
     where: {
       endTime: { lt: now },
+      attended: true,
       status: { not: "completed" },
+      
     },
     data: { status: "completed" },
   })

@@ -10,7 +10,7 @@ export default function SignIn() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
+  }) 
   const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {

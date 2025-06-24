@@ -25,6 +25,7 @@ export default function Sessions() {
   const { sessionsStats: stats, setSessionsStats } = useAdminContext()
 
   useEffect(() => {
+    fetchStats()
     setIsClient(true)
   }, [])
 

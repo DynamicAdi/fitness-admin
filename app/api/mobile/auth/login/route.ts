@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         { error: "Missing required fields" },
         { status: 400 }
       )
-    }
+    } 
 
     const user = await prisma.user.findUnique({
       where: { email }

@@ -28,26 +28,25 @@ export function ChatMonitor({
       <div className="flex items-center gap-3">
         <Avatar>
           <AvatarFallback>
-            {
-            chat?.trainer.name
+            {chat?.trainer.name
               .split(" ")
               .map((n) => n[0])
-              .join("")
-            }
+              .join("")}
 
-{
-            trainerDetailsWithCounts?.trainerName
+            {trainerDetailsWithCounts?.trainerName
               .split(" ")
               .map((n) => n[0])
-              .join("")
-            }
-              
-              
+              .join("")}
           </AvatarFallback>
         </Avatar>
         <div>
-          <p className="font-medium">{chat?.trainer.name}{trainerDetailsWithCounts?.trainerName}</p>
-          <p className="text-sm text-muted-foreground">{"Active with " + chat?.user.name}</p>
+          <p className="font-medium">
+            {chat?.trainer.name}
+            {trainerDetailsWithCounts?.trainerName}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {"Active with " + chat?.user.name}
+          </p>
         </div>
       </div>
       {/* {indicator && (

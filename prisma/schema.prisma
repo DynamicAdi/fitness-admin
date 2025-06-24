@@ -94,6 +94,7 @@ model Schedule {
   scheduleDescription String?
   sessionType         String?
   status              String   @default("requested")
+  attended            Boolean  @default(false) //Newly added
   userId              String
   trainerId           String
   user                User     @relation("UserSchedules", fields: [userId], references: [id], onDelete: Cascade)
