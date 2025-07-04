@@ -91,13 +91,14 @@ export default function SignIn() {
             Sign in with Instagram
           </button>
         </form>
-
+        { /*
         <p className="text-center mt-6 text-sm text-gray-400">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-blue-500 hover:underline">
             Sign up
           </Link>
         </p>
+        */ }
       </div>
     </div>
   )
