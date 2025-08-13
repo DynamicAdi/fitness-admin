@@ -17,6 +17,7 @@ interface User {
   name: string
   email: string
   role: string
+  phone: string
   status: "ACTIVE" | "INACTIVE"
   membership: "BASIC" | "PREMIUM" | null
   image: string | null
@@ -121,6 +122,7 @@ export function AdminTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Admin</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Actions</TableHead>
@@ -154,7 +156,7 @@ export function AdminTable() {
                     </div>
                   </div>
                 </TableCell>
-
+                <TableCell>{user.phone ? user.phone : "N/A"}</TableCell>
                 <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>

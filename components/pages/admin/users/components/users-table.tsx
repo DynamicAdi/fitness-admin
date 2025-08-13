@@ -14,6 +14,7 @@ interface User {
   id: string
   name: string
   email: string
+  phone: string
   status: "ACTIVE" | "INACTIVE"
   membership: "BASIC" | "PREMIUM" | null
   image: string | null
@@ -118,6 +119,7 @@ export function UsersTable() {
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Membership</TableHead>
               <TableHead>Created At</TableHead>
@@ -152,6 +154,9 @@ export function UsersTable() {
                       <div className="text-sm text-muted-foreground">{user.email}</div>
                     </div>
                   </div>
+                </TableCell>
+                <TableCell>
+                  <span className="capitalize">{user?.phone ? user.phone : "N/A"}</span>
                 </TableCell>
                 <TableCell>
                   <div

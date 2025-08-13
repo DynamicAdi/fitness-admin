@@ -15,6 +15,7 @@ interface Trainer {
   id: string
   name: string
   email: string
+  phone?: string
   image?: string
   specialization: string
   rating: number | null
@@ -265,6 +266,7 @@ export function TrainerTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Trainer</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Specialization</TableHead>
               <TableHead>Rating</TableHead>
               <TableHead>Clients</TableHead>
@@ -297,6 +299,7 @@ export function TrainerTable() {
                       </div>
                     </div>
                   </TableCell>
+                  <TableCell>{trainer.phone ? trainer.phone : "N/A"}</TableCell>
                   <TableCell>{trainer.specialization}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">

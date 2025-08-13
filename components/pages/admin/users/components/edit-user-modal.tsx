@@ -12,6 +12,7 @@ interface User {
   id: string
   name: string
   email: string
+  phone?: string
   status: "ACTIVE" | "INACTIVE"
   membership: "BASIC" | "PREMIUM" | null
   trainer: {
@@ -30,6 +31,7 @@ interface EditUserModalProps {
 export function EditUserModal({ open, onOpenChange, user, onSuccess }: EditUserModalProps) {
   const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
+  const [phone, setPhone] = useState(user?.phone || "")
   const [membership, setMembership] = useState(user.membership)
   const [trainerId, setTrainerId] = useState<string | undefined>(user.trainer?.id)
   const [trainers, setTrainers] = useState<{ id: string; name: string }[]>([])
@@ -56,6 +58,7 @@ export function EditUserModal({ open, onOpenChange, user, onSuccess }: EditUserM
         name,
         email,
         membership,
+        phone,
         status: membership == null ? "INACTIVE" : "ACTIVE",
         trainerId,
       }
@@ -80,6 +83,38 @@ export function EditUserModal({ open, onOpenChange, user, onSuccess }: EditUserM
       toast.error("An error occurred while updating the user")
     }
   }
+
+  const handleChange = (value: string) => {
+
+    
+    if (!value.startsWith("+")) {
+      value = "+" + value.replace(/\+/g, "");
+    }
+
+    
+    value = "+" + value.slice(1).replace(/\D/g, "");
+
+    
+    const match = value.match(/^(\+\d{0,3})(\d{0,10})/);
+    if (match) {
+      value = match[1] + match[2];
+    }
+
+    
+    const withoutPlus = value.slice(1);
+    const matchParts = withoutPlus.match(/^(\d*)(\d*)$/);
+    const countryCode = matchParts ? matchParts[1] : "";
+    const mainNumber = matchParts ? matchParts[2] : "";
+
+    if (countryCode.length === 0) {
+      console.warn("Country code is required.");
+    }
+    if (mainNumber.length > 10) {
+      console.warn("Main number can only be up to 10 digits.");
+    }
+
+    setPhone(value);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -107,6 +142,18 @@ export function EditUserModal({ open, onOpenChange, user, onSuccess }: EditUserM
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter email"
               required
+            />
+          </div>
+                    <div className="grid gap-2">
+            <Label htmlFor="email">Phone</Label>
+            <Input
+              id="phone"
+              type="phone"
+              value={phone}
+              onChange={(e) => handleChange(e.target.value)}
+              placeholder="Enter Phone Number"
+              max={10}
+              maxLength={10}
             />
           </div>
           <div className="grid gap-2">

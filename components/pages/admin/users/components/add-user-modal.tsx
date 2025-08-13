@@ -18,7 +18,7 @@ interface AddUserModalProps {
 export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [trainers, setTrainers] = useState<{ id: string; name: string }[]>([])
-
+  const [phone, setPhone] = useState("")
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
@@ -33,6 +33,7 @@ export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProp
     }
     fetchTrainers()
   }, [])
+  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -40,6 +41,7 @@ export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProp
     const userData = {
       name: formData.get("name"),
       email: formData.get("email"),
+      phone: phone,
       password: formData.get("password"),
       membership: formData.get("membership"),
       trainerId: formData.get("trainerId"),
@@ -68,6 +70,37 @@ export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProp
     }
   }
 
+    const handleChange = (value: string) => {
+
+    
+    if (!value.startsWith("+")) {
+      value = "+" + value.replace(/\+/g, "");
+    }
+
+    
+    value = "+" + value.slice(1).replace(/\D/g, "");
+
+    
+    const match = value.match(/^(\+\d{0,3})(\d{0,10})/);
+    if (match) {
+      value = match[1] + match[2];
+    }
+
+    
+    const withoutPlus = value.slice(1);
+    const matchParts = withoutPlus.match(/^(\d*)(\d*)$/);
+    const countryCode = matchParts ? matchParts[1] : "";
+    const mainNumber = matchParts ? matchParts[2] : "";
+
+    if (countryCode.length === 0) {
+      console.warn("Country code is required.");
+    }
+    if (mainNumber.length > 10) {
+      console.warn("Main number can only be up to 10 digits.");
+    }
+
+    setPhone(value);
+  };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -82,6 +115,10 @@ export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProp
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" name="email" type="email" placeholder="Enter email" required />
+          </div>
+            <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="phone" type="text" onChange={(e) => handleChange(e.target.value)} placeholder="Enter Phone No." />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
