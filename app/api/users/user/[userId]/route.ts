@@ -20,7 +20,7 @@ export async function PUT(request: Request, context: RouteContext) {
     }
 
     const { userId } = await context.params
-    const { name, email, membership, status, trainerId } = await request.json()
+    const { name, email, membership, status, trainerId, phone } = await request.json()
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -29,6 +29,7 @@ export async function PUT(request: Request, context: RouteContext) {
         email,
         membership,
         status,
+        phone,
         trainerId: trainerId || null,
       },
     })
