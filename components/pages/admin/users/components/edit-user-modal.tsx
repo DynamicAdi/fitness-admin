@@ -31,7 +31,7 @@ interface EditUserModalProps {
 export function EditUserModal({ open, onOpenChange, user, onSuccess }: EditUserModalProps) {
   const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
-  const [phone, setPhone] = useState(user?.phone || "")
+  const [phone, setPhone] = useState(user?.phone || "+")
   const [membership, setMembership] = useState(user.membership)
   const [trainerId, setTrainerId] = useState<string | undefined>(user.trainer?.id)
   const [trainers, setTrainers] = useState<{ id: string; name: string }[]>([])
@@ -151,9 +151,7 @@ export function EditUserModal({ open, onOpenChange, user, onSuccess }: EditUserM
               type="phone"
               value={phone}
               onChange={(e) => handleChange(e.target.value)}
-              placeholder="Enter Phone Number"
-              max={10}
-              maxLength={10}
+              placeholder="Enter Phone No. in INTERNATIONAL FORMAT" max={13} maxLength={13}
             />
           </div>
           <div className="grid gap-2">

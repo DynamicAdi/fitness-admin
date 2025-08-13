@@ -18,7 +18,7 @@ interface AddUserModalProps {
 export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [trainers, setTrainers] = useState<{ id: string; name: string }[]>([])
-  const [phone, setPhone] = useState("")
+  const [phone, setPhone] = useState("+")
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
@@ -117,8 +117,8 @@ export function AddUserModal({ open, onOpenChange, onSuccess }: AddUserModalProp
             <Input id="email" name="email" type="email" placeholder="Enter email" required />
           </div>
             <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="phone" type="text" onChange={(e) => handleChange(e.target.value)} placeholder="Enter Phone No." />
+            <Label htmlFor="email">Phone</Label>
+            <Input id="phone" type="text" onChange={(e) => handleChange(e.target.value)} placeholder="Enter Phone No. in INTERNATIONAL FORMAT" max={13} maxLength={13} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
